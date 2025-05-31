@@ -1,13 +1,33 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+
+import React, { useState } from 'react';
+import { LoginForm } from '../components/auth/LoginForm';
+import { Dashboard } from '../components/dashboard/Dashboard';
+import { UserProvider } from '../context/UserContext';
 
 const Index = () => {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [currentUser, setCurrentUser] = useState(null);
+
+  const handleLogin = (user: any) => {
+    setCurrentUser(user);
+    setIsAuthenticated(true);
+  };
+
+  const handleLogout = () => {
+    setCurrentUser(null);
+    setIsAuthenticated(false);
+  };
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">Welcome to Your Blank App</h1>
-        <p className="text-xl text-gray-600">Start building your amazing project here!</p>
+    <UserProvider>
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800">
+        {!isAuthenticated ? (
+          <LoginForm onLogin={handleLogin} />
+        ) : (
+          <Dashboard user={currentUser} onLogout={handleLogout} />
+        )}
       </div>
-    </div>
+    </UserProvider>
   );
 };
 
